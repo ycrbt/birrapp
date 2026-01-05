@@ -2,96 +2,100 @@
 
 import { useState } from "react";
 
+interface BeerSizeButtonProps {
+    size: string;
+    liters: number;
+    onClick: (liters: number) => void;
+}
+
+function BeerSizeButton({ size, liters, onClick }: BeerSizeButtonProps) {
+    return (
+        <div className="rounded-full shadow-[0px_-2px_3px_rgba(0,0,0,0.25)] active:shadow-[0px_-2px_1px_rgba(0,0,0,0.25)]">
+            <button 
+                className="font-bold size-18 text-[16px] rounded-full shadow-[0px_2px_5px_rgba(0,0,0,0.25)] active:shadow-[0px_2px_1px_rgba(0,0,0,0.25)] active:text-[15px] transition" 
+                onClick={() => onClick(liters)}
+            >
+                <span>{size}</span>
+            </button>
+        </div>
+    );
+}
+
 export default function BeerCounter() {
-  const [totalLiters, setTotalLiters] = useState(0);
-  const [history, setHistory] = useState<number[]>([]);
+    const [totalLiters, setTotalLiters] = useState(0);
+    const [history, setHistory] = useState<number[]>([]);
 
-  const addBeers = (liters: number) => {
-    setHistory([...history, liters]);
-    setTotalLiters(totalLiters + liters);
-  };
+    const addBeers = (liters: number) => {
+        setHistory([...history, liters]);
+        setTotalLiters(totalLiters + liters);
+    };
 
-  const undoLastAction = () => {
-    if (history.length > 0) {
-      const lastAction = history[history.length - 1];
-      setTotalLiters(totalLiters - lastAction);
-      setHistory(history.slice(0, -1));
-    }
-  };
+    const undoLastAction = () => {
+        if (history.length > 0) {
+            const lastAction = history[history.length - 1];
+            setTotalLiters(totalLiters - lastAction);
+            setHistory(history.slice(0, -1));
+        }
+    };
 
-  const formatLiters = (liters: number): string => {
-    // Round to 2 decimal places to avoid floating point issues
-    const rounded = Math.round(liters * 100) / 100;
-    
-    // If it's a whole number, don't show decimals
-    if (rounded % 1 === 0) {
-      return rounded.toString();
-    }
-    
-    // Otherwise, show up to 2 decimals, removing trailing zeros
-    return rounded.toFixed(2).replace(/\.?0+$/, '');
-  };
+    const formatLiters = (liters: number): string => {
+        // If it's a whole number, don't show decimals
+        if (liters % 1 === 0) {
+            return liters.toString();
+        }
 
-  const formatCanas = (canas: number): string => {
-    // Round to 1 decimal place
-    const rounded = Math.round(canas * 10) / 10;
-    
-    // If it's a whole number, don't show decimals
-    if (rounded % 1 === 0) {
-      return rounded.toString();
-    }
-    
-    // Otherwise, show 1 decimal place
-    return rounded.toFixed(1);
-  };
+        // Otherwise, show up to 2 decimals, removing trailing zeros
+        return liters.toFixed(2);
+    };
 
-  const canasCount = totalLiters / 0.33;
+    const formatCanas = (canas: number): string => {
+        // If it's a whole number, don't show decimals
+        if (canas % 1 === 0) {
+            return canas.toString();
+        }
 
-  return (
-    <div className="beer-counter">
-      <div className="center-content">
-        <div className="counter-text">{formatLiters(totalLiters)}L</div>
-        <div className="canas-text">
-          {totalLiters === 0 
-            ? "¡Sal a beber! Ese hígado no va a engordar solo" 
-            : `Llevas ${formatCanas(canasCount)} cañas ¡Sigue así!`
-          }
-        </div>
-      </div>
+        // Otherwise, show 1 decimal place
+        return canas.toFixed(1);
+    };
 
-      <div className="bottom-section">
-        <div className="bottom-buttons">
-          <div className="button-wrapper">
-            <button className="circle-button" onClick={() => addBeers(0.33)}>
-              <span className="volume-text">33cl</span>
-            </button>
-          </div>
-          <div className="button-wrapper">
-            <button className="circle-button" onClick={() => addBeers(0.5)}>
-              <span className="volume-text">0,5L</span>
-            </button>
-          </div>
-          <div className="button-wrapper">
-            <button className="circle-button" onClick={() => addBeers(1)}>
-              <span className="volume-text">1L</span>
-            </button>
-          </div>
-        </div>
+    const canasCount = totalLiters / 0.33;
 
-        <div className="undo-button-wrapper">
-          <button
-            className={`undo-button ${history.length === 0 ? 'disabled' : ''}`}
-            onClick={undoLastAction}
-            disabled={history.length === 0}
-          >
-            <span className={`undo-button-text ${history.length === 0 ? 'disabled' : ''}`}>
-              Me sobró esa última
-            </span>
-          </button>
-        </div>
-      </div>
+    return (
+        <div className="h-screen w-screen text-yellow-300 bg-zinc-800">
+            <div className="h-1/3 flex flex-col items-center text-center justify-center">
+                <h1 className="font-bold text-6xl">
+                    {formatLiters(totalLiters)}L
+                </h1>
+                <h2 className="font-bold text-xl italic">
+                    {totalLiters === 0
+                        ? "¡Sal a beber! Ese hígado no va a engordar solo"
+                        : `Llevas ${formatCanas(canasCount)} cañas ¡Sigue así!`
+                    }
+                </h2>
+            </div>
 
-      <style jsx>{`
+            <div className="h-2/3 flex flex-col gap-4 justify-end p-8">
+                <div className="flex flex-row gap-4 justify-center flex-wrap">
+                    <BeerSizeButton size="20cl" liters={0.20} onClick={addBeers} />
+                    <BeerSizeButton size="25cl" liters={0.25} onClick={addBeers} />
+                    <BeerSizeButton size="33cl" liters={0.33} onClick={addBeers} />
+                    <BeerSizeButton size="50cl" liters={0.50} onClick={addBeers} />
+                    <BeerSizeButton size="1L" liters={1.0} onClick={addBeers} />
+                </div>
+
+
+                <div className="w-full rounded-full shadow-[0px_-2px_3px_rgba(0,0,0,0.25)] active:shadow-[0px_-2px_1px_rgba(0,0,0,0.25)]">
+                    <button
+                        className="w-full size-18 text-[16px] rounded-full shadow-[0px_2px_5px_rgba(0,0,0,0.25)] active:shadow-[0px_2px_1px_rgba(0,0,0,0.25)] active:text-[15px] transition"
+                        disabled={history.length === 0}
+                        onClick={undoLastAction}>
+                        <span className="">Me sobró esa última</span>
+                    </button>
+                </div>
+
+            </div>
+
+            <style jsx>{`
         .beer-counter {
           display: flex;
           flex-direction: column;
@@ -255,6 +259,6 @@ export default function BeerCounter() {
           }
         }
       `}</style>
-    </div>
-  );
+        </div>
+    );
 }
