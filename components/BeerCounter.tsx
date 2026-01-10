@@ -39,23 +39,39 @@ export default function BeerCounter() {
     };
 
     const formatLiters = (liters: number): string => {
+        // Fix floating point precision issues
+        const rounded = Math.round(liters * 100) / 100;
+
+        // If it's effectively zero or very close to zero, return "0"
+        if (Math.abs(rounded) < 0.01) {
+            return "0";
+        }
+
         // If it's a whole number, don't show decimals
-        if (liters % 1 === 0) {
-            return liters.toString();
+        if (rounded % 1 === 0) {
+            return rounded.toString();
         }
 
         // Otherwise, show up to 2 decimals, removing trailing zeros
-        return liters.toFixed(2);
+        return rounded.toFixed(2).replace(/\.?0+$/, '');
     };
 
     const formatCanas = (canas: number): string => {
+        // Fix floating point precision issues
+        const rounded = Math.round(canas * 10) / 10;
+
+        // If it's effectively zero or very close to zero, return "0"
+        if (Math.abs(rounded) < 0.1) {
+            return "0";
+        }
+
         // If it's a whole number, don't show decimals
-        if (canas % 1 === 0) {
-            return canas.toString();
+        if (rounded % 1 === 0) {
+            return rounded.toString();
         }
 
         // Otherwise, show 1 decimal place
-        return canas.toFixed(1);
+        return rounded.toFixed(1);
     };
 
     const canasCount = totalLiters / 0.33;
@@ -66,7 +82,7 @@ export default function BeerCounter() {
                 <h1 className="font-bold text-6xl">
                     {formatLiters(totalLiters)}L
                 </h1>
-                <h2 className="font-bold text-xl italic">
+                <h2 className="font-bold text-xl italic mx-2">
                     {totalLiters === 0
                         ? "¡Sal a beber! Ese hígado no va a engordar solo"
                         : `Llevas ${formatCanas(canasCount)} cañas ¡Sigue así!`

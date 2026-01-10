@@ -14,9 +14,6 @@ export default async function Home() {
   }
 
   return (
-    <>
-      <h1>Bienvenido {session.user.name}</h1>
       <BeerCounter />
-    </>
   );
 }
