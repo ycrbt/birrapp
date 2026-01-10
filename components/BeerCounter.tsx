@@ -14,11 +14,10 @@ function BeerSizeButton({ size, liters, onClick, disabled = false }: BeerSizeBut
     return (
         <div className={`rounded-full shadow-[0px_-2px_3px_rgba(0,0,0,0.25)] ${disabled ? 'opacity-50' : 'active:shadow-[0px_-2px_1px_rgba(0,0,0,0.25)]'}`}>
             <button
-                className={`font-bold size-18 text-[16px] rounded-full shadow-[0px_2px_5px_rgba(0,0,0,0.25)] transition ${
-                    disabled 
-                        ? 'cursor-not-allowed' 
-                        : 'active:shadow-[0px_2px_1px_rgba(0,0,0,0.25)] active:text-[15px]'
-                }`}
+                className={`font-bold size-18 text-[16px] rounded-full shadow-[0px_2px_5px_rgba(0,0,0,0.25)] transition ${disabled
+                    ? 'cursor-not-allowed'
+                    : 'active:shadow-[0px_2px_1px_rgba(0,0,0,0.25)] active:text-[15px]'
+                    }`}
                 onClick={() => !disabled && onClick(liters)}
                 disabled={disabled}
             >
@@ -128,7 +127,7 @@ export default function BeerCounter() {
                 )}
             </div>
 
-            <div className="h-2/3 flex flex-col gap-4 justify-end p-8">
+            <div className="h-2/3 flex flex-col gap-4 justify-end p-8 m-8">
                 <div className="flex flex-row gap-4 justify-center flex-wrap">
                     <BeerSizeButton size="20cl" liters={0.20} onClick={addBeers} disabled={isLoading} />
                     <BeerSizeButton size="25cl" liters={0.25} onClick={addBeers} disabled={isLoading} />
@@ -138,13 +137,12 @@ export default function BeerCounter() {
                 </div>
 
 
-                <div className={`w-full rounded-full shadow-[0px_-2px_3px_rgba(0,0,0,0.25)] ${isLoading ? 'opacity-50' : 'active:shadow-[0px_-2px_1px_rgba(0,0,0,0.25)]'}`}>
+                <div className={`w-full mx-8 rounded-full shadow-[0px_-2px_3px_rgba(0,0,0,0.25)] ${isLoading ? 'opacity-50' : 'active:shadow-[0px_-2px_1px_rgba(0,0,0,0.25)]'}`}>
                     <button
-                        className={`font-bold w-full size-18 text-[16px] rounded-full shadow-[0px_2px_5px_rgba(0,0,0,0.25)] transition ${
-                            isLoading || history.length === 0
-                                ? 'cursor-not-allowed'
-                                : 'active:shadow-[0px_2px_1px_rgba(0,0,0,0.25)] active:text-[15px]'
-                        }`}
+                        className={`font-bold w-full size-18 text-[16px] rounded-full shadow-[0px_2px_5px_rgba(0,0,0,0.25)] transition ${isLoading || history.length === 0
+                            ? 'cursor-not-allowed'
+                            : 'active:shadow-[0px_2px_1px_rgba(0,0,0,0.25)] active:text-[15px]'
+                            }`}
                         disabled={history.length === 0 || isLoading}
                         onClick={undoLastAction}>
                         <span className="">Me sobró esa última</span>
