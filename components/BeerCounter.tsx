@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from "react";
+import { recordBeer, removeBeer } from "@/lib/persistence/beer-count"
 
 interface BeerSizeButtonProps {
     size: string;
@@ -23,17 +24,20 @@ function BeerSizeButton({ size, liters, onClick }: BeerSizeButtonProps) {
 
 export default function BeerCounter() {
     const [totalLiters, setTotalLiters] = useState(0);
-    const [history, setHistory] = useState<number[]>([]);
+    const [history, setHistory] = useState<{liters: number; beerId: number}[]>([]);
 
-    const addBeers = (liters: number) => {
-        setHistory([...history, liters]);
+    const addBeers = async (liters: number) => {
+        const beerId = await recordBeer(liters);
+        setHistory([...history, {liters, beerId}]);
         setTotalLiters(totalLiters + liters);
+        
     };
 
     const undoLastAction = () => {
         if (history.length > 0) {
             const lastAction = history[history.length - 1];
-            setTotalLiters(totalLiters - lastAction);
+            setTotalLiters(totalLiters - lastAction.liters);
+            removeBeer(lastAction.beerId);
             setHistory(history.slice(0, -1));
         }
     };
