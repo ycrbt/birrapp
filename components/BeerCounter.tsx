@@ -77,7 +77,7 @@ export default function BeerCounter() {
     const canasCount = totalLiters / 0.33;
 
     return (
-        <div className="h-screen w-screen text-yellow-300 bg-zinc-800">
+        <div className="h-screen w-screen text-yellow-300 bg-zinc-800 fixed inset-0 overflow-hidden">
             <div className="h-1/3 flex flex-col items-center text-center justify-center">
                 <h1 className="font-bold text-6xl">
                     {formatLiters(totalLiters)}L

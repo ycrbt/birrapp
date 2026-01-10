@@ -1,1 +1,23 @@
 @import "tailwindcss";
+
+/* Prevent mobile scrolling and ensure full background coverage */
+html, body {
+  height: 100%;
+  overflow: hidden;
+  background-color: rgb(39 39 42); /* bg-zinc-800 */
+  position: fixed;
+  width: 100%;
+}
+
+/* Prevent overscroll bounce on iOS */
+body {
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Ensure no margin/padding that could cause white space */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
