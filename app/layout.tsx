@@ -15,6 +15,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Birrapp",
   description: "Haz que tu madre esté orgullosa",
+  viewport: "width=device-width, initial-scale=1, viewport-fit=cover",
 };
 
 export default function RootLayout({
@@ -24,10 +25,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="h-full bg-zinc-800">
-      <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-      </head>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased h-full bg-zinc-800 overflow-hidden`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased h-full bg-zinc-800`}>
         {children}
       </body>
     </html>

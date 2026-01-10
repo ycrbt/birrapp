@@ -105,7 +105,7 @@ export default function BeerCounter() {
     const canasCount = totalLiters / 0.33;
 
     return (
-        <div className="h-screen w-screen text-yellow-300 bg-zinc-800 fixed inset-0 overflow-hidden">
+        <div className="h-full text-yellow-300 bg-zinc-800">
             <div className="h-1/3 flex flex-col items-center text-center justify-center gap-2">
                 {isLoading ? (
                     <>
@@ -127,7 +127,8 @@ export default function BeerCounter() {
                 )}
             </div>
 
-            <div className="h-2/3 flex flex-col gap-4 justify-end p-8 m-8">
+            <div className="h-2/3 flex flex-col gap-4 justify-end p-6">
+
                 <div className="flex flex-row gap-4 justify-center flex-wrap">
                     <BeerSizeButton size="20cl" liters={0.20} onClick={addBeers} disabled={isLoading} />
                     <BeerSizeButton size="25cl" liters={0.25} onClick={addBeers} disabled={isLoading} />
@@ -136,8 +137,7 @@ export default function BeerCounter() {
                     <BeerSizeButton size="1L" liters={1.0} onClick={addBeers} disabled={isLoading} />
                 </div>
 
-
-                <div className={`w-full mx-8 rounded-full shadow-[0px_-2px_3px_rgba(0,0,0,0.25)] ${isLoading ? 'opacity-50' : 'active:shadow-[0px_-2px_1px_rgba(0,0,0,0.25)]'}`}>
+                <div className={`rounded-full shadow-[0px_-2px_3px_rgba(0,0,0,0.25)] ${isLoading ? 'opacity-50' : 'active:shadow-[0px_-2px_1px_rgba(0,0,0,0.25)]'}`}>
                     <button
                         className={`font-bold w-full size-18 text-[16px] rounded-full shadow-[0px_2px_5px_rgba(0,0,0,0.25)] transition ${isLoading || history.length === 0
                             ? 'cursor-not-allowed'

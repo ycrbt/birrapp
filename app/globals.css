@@ -1,27 +1,23 @@
 @import "tailwindcss";
 
-/* Prevent mobile scrolling and ensure full background coverage */
-html, body {
+html,
+body {
   height: 100%;
-  overflow: hidden;
-  background-color: rgb(39 39 42); /* bg-zinc-800 */
-  position: fixed;
+  background-color: rgb(39 39 42);
   width: 100%;
-  /* Safe area insets for all devices */
+}
+
+/* Custom safe area aware height */
+.safe-area-screen {
+  height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
   padding-top: env(safe-area-inset-top);
   padding-bottom: env(safe-area-inset-bottom);
   padding-left: env(safe-area-inset-left);
   padding-right: env(safe-area-inset-right);
 }
 
-/* Prevent overscroll bounce on iOS */
-body {
-  overscroll-behavior: none;
-  -webkit-overflow-scrolling: touch;
-}
-
 /* Ensure no margin/padding that could cause white space */
-* {
+html, body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
