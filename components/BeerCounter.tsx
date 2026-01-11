@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useEffect } from "react";
-import { recordBeer, removeBeer, getBeerTotal } from "@/lib/persistence/beer-count"
+import { useState } from "react";
+import { recordBeer, removeBeer } from "@/lib/persistence/beer-count";
+import { useBeer } from "@/lib/context/BeerContext";
 
 interface BeerSizeButtonProps {
     size: string;
@@ -28,30 +29,11 @@ function BeerSizeButton({ size, liters, onClick, disabled = false }: BeerSizeBut
 }
 
 export default function BeerCounter() {
-    const [totalLiters, setTotalLiters] = useState(0);
+    const { totalLiters, isLoading, updateTotal } = useBeer();
     const [history, setHistory] = useState<{ liters: number; futureBeerId: Promise<number> }[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
-
-    // Fetch total liters when component loads
-    useEffect(() => {
-        const fetchTotalLiters = async () => {
-            try {
-                const total = await getBeerTotal();
-                console.log("fetch");
-                // Ensure it's a number to prevent NaN issues
-                setTotalLiters(Number(total) || 0);
-            } catch (error) {
-                console.error('Failed to fetch beer total:', error);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
-        fetchTotalLiters();
-    }, []);
 
     const addBeers = async (liters: number) => {
-        setTotalLiters(totalLiters + liters);
+        updateTotal(totalLiters + liters);
         const futureBeerId = recordBeer(liters);
         setHistory([...history, { liters, futureBeerId }]);
     };
@@ -59,7 +41,7 @@ export default function BeerCounter() {
     const undoLastAction = async () => {
         if (history.length > 0) {
             const lastAction = history[history.length - 1];
-            setTotalLiters(totalLiters - lastAction.liters);
+            updateTotal(totalLiters - lastAction.liters);
             setHistory(history.slice(0, -1));
             removeBeer(await lastAction.futureBeerId);
         }
