@@ -29,7 +29,7 @@ function BeerSizeButton({ size, liters, onClick, disabled = false }: BeerSizeBut
 
 export default function BeerCounter() {
     const [totalLiters, setTotalLiters] = useState(0);
-    const [history, setHistory] = useState<{ liters: number; beerId: number }[]>([]);
+    const [history, setHistory] = useState<{ liters: number; futureBeerId: Promise<number> }[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 
     // Fetch total liters when component loads
@@ -51,18 +51,17 @@ export default function BeerCounter() {
     }, []);
 
     const addBeers = async (liters: number) => {
-        const beerId = await recordBeer(liters);
-        setHistory([...history, { liters, beerId }]);
         setTotalLiters(totalLiters + liters);
-
+        const futureBeerId = recordBeer(liters);
+        setHistory([...history, { liters, futureBeerId }]);
     };
 
-    const undoLastAction = () => {
+    const undoLastAction = async () => {
         if (history.length > 0) {
             const lastAction = history[history.length - 1];
             setTotalLiters(totalLiters - lastAction.liters);
-            removeBeer(lastAction.beerId);
             setHistory(history.slice(0, -1));
+            removeBeer(await lastAction.futureBeerId);
         }
     };
 
