@@ -12,5 +12,5 @@ export default async function Home() {
     redirect("/signup")
   }
 
-  return <AuthenticatedHome/>;
+  return <AuthenticatedHome />;
 }

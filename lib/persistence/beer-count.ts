@@ -99,4 +99,17 @@ export async function getBeerTotal(): Promise<number> {
     return result.length > 0 ? Number(result[0].quantity) : 0;
 }
 
+export async function getBeerRankings(): Promise<Array<{ name: string; quantity: number }>> {
+    const result = await sql.query(
+        `SELECT "user".name, bt.quantity
+         FROM beer_totals bt
+         JOIN "user" ON bt.user_id = "user".id
+         ORDER BY bt.quantity DESC
+         LIMIT 10`
+    );
 
+    return result.map(row => ({
+        name: row.name,
+        quantity: Number(row.quantity)
+    }));
+}
