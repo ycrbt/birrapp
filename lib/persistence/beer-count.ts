@@ -109,7 +109,7 @@ export async function getBeerRankings(): Promise<Array<{ name: string; quantity:
     );
 
     return result.map(row => ({
-        name: row.name,
+        name: row.name.split(' ')[0],
         quantity: Number(row.quantity)
     }));
 }
