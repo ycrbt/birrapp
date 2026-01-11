@@ -104,8 +104,8 @@ export default function BeerCounter() {
     const canasCount = totalLiters / 0.33;
 
     return (
-        <div className="h-full text-yellow-300 bg-zinc-800">
-            <div className="h-1/3 flex flex-col items-center text-center justify-center gap-2">
+        <div className="h-full text-yellow-300 bg-zinc-900 flex flex-col overflow-hidden">
+            <div className="flex-1 flex flex-col items-center text-center justify-center gap-2 px-4">
                 {isLoading ? (
                     <>
                         <div className="font-bold text-6xl bg-yellow-300/20 rounded-lg animate-[pulse_0.8s_ease-in-out_infinite] h-20 w-32"></div>
@@ -126,7 +126,7 @@ export default function BeerCounter() {
                 )}
             </div>
 
-            <div className="h-2/3 flex flex-col gap-4 justify-end p-6">
+            <div className="flex-1 flex flex-col gap-4 justify-end p-6 pb-8">
 
                 <div className="flex flex-row gap-4 justify-center flex-wrap">
                     <BeerSizeButton size="20cl" liters={0.20} onClick={addBeers} disabled={isLoading} />

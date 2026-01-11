@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -14,9 +14,14 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Birrapp",
-  description: "Haz que tu madre esté orgullosa",
-  viewport: "width=device-width, initial-scale=1, viewport-fit=cover",
+  description: "Haz que tu madre esté orgullosa"
 };
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover"
+}
 
 export default function RootLayout({
   children,
@@ -24,8 +29,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full bg-zinc-800">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased h-full bg-zinc-800`}>
+    <html lang="en" className="h-full overflow-hidden">
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased h-full overflow-hidden bg-zinc-900`}>
         {children}
       </body>
     </html>

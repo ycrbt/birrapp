@@ -1,10 +1,9 @@
-import BeerCounter from '../components/BeerCounter';
+import AuthenticatedHome from '../components/AuthenticatedHome';
 import { auth } from '@/lib/auth/auth';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 export default async function Home() {
-
   const session = await auth.api.getSession({
     headers: await headers()
   });
@@ -13,7 +12,5 @@ export default async function Home() {
     redirect("/signup")
   }
 
-  return (
-      <BeerCounter />
-  );
+  return <AuthenticatedHome/>;
 }
