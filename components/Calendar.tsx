@@ -40,8 +40,8 @@ export default function Calendar({ className = '' }: CalendarProps) {
     // Set default selected day to today if it's in the current month
     useEffect(() => {
         const today = new Date();
-        const isCurrentMonth = currentDate.getMonth() === today.getMonth() && 
-                              currentDate.getFullYear() === today.getFullYear();
+        const isCurrentMonth = currentDate.getMonth() === today.getMonth() &&
+            currentDate.getFullYear() === today.getFullYear();
         if (isCurrentMonth) {
             setSelectedDay(today.getDate());
         } else {
@@ -86,7 +86,7 @@ export default function Calendar({ className = '' }: CalendarProps) {
                 getBeersByMonth(currentDate.getFullYear(), currentDate.getMonth()),
                 getDetailedBeersByMonth(currentDate.getFullYear(), currentDate.getMonth())
             ]);
-            
+
             const beerMap: BeerData = {};
             monthData.forEach(item => {
                 // The date should already be in YYYY-MM-DD format from the database
@@ -146,13 +146,13 @@ export default function Calendar({ className = '' }: CalendarProps) {
             const dateTimeStr = `${dateStr} ${newBeerTime}:00`;
 
             await recordBeerWithDateTime(quantity, dateTimeStr);
-            
+
             // Update total in context
             updateTotal(totalLiters + quantity);
 
             // Refresh data
             await fetchBeerData();
-            
+
             // Close modal
             setShowAddModal(false);
             setNewBeerQuantity('');
@@ -196,14 +196,14 @@ export default function Calendar({ className = '' }: CalendarProps) {
 
             const oldQuantity = editingBeer.quantity;
             await updateBeer(editingBeer.id, quantity, dateTimeStr);
-            
+
             // Update total in context (difference between new and old quantity)
             const quantityDifference = quantity - oldQuantity;
             updateTotal(totalLiters + quantityDifference);
 
             // Refresh data
             await fetchBeerData();
-            
+
             // Close modal
             setShowEditModal(false);
             setEditingBeer(null);
@@ -227,13 +227,13 @@ export default function Calendar({ className = '' }: CalendarProps) {
 
         try {
             await removeBeer(deletingBeer.id);
-            
+
             // Update total in context
             updateTotal(totalLiters - deletingBeer.quantity);
 
             // Refresh data
             await fetchBeerData();
-            
+
             // Close modal
             setShowDeleteModal(false);
             setDeletingBeer(null);
@@ -289,7 +289,7 @@ export default function Calendar({ className = '' }: CalendarProps) {
         // Days of the month
         for (let day = 1; day <= daysInMonth; day++) {
             const isToday = isCurrentMonth && day === today.getDate();
-            
+
             // Format date to match database format (YYYY-MM-DD)
             const dateStr = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
             const beerQuantity = beerData[dateStr] || 0;
@@ -299,20 +299,19 @@ export default function Calendar({ className = '' }: CalendarProps) {
                 <div
                     key={day}
                     onClick={() => handleDayClick(day)}
-                    className={`h-10 flex items-center justify-center cursor-pointer transition-colors relative ${
-                        beerQuantity > 0 ? 'text-zinc-900 font-semibold hover:opacity-80' : 'text-yellow-300 hover:bg-zinc-800'
-                    }`}
+                    className={`h-10 flex items-center justify-center cursor-pointer transition-colors relative ${beerQuantity > 0 ? 'text-zinc-900 font-semibold hover:opacity-80' : 'text-yellow-300 hover:bg-zinc-800'
+                        }`}
                 >
                     {/* Beer quantity background circle */}
                     {beerQuantity > 0 && (
                         <div className={`absolute w-8 h-8 rounded-full ${beerIntensity}`} />
                     )}
-                    
+
                     {/* Today's date indicator - circular border */}
                     {isToday && (
                         <div className="absolute w-8 h-8 rounded-full border-2 border-yellow-400" />
                     )}
-                    
+
                     {/* Day number */}
                     <span className={`relative z-10 ${beerQuantity > 0 ? 'text-zinc-900 font-semibold' : isToday ? 'font-bold' : ''}`}>
                         {day}
@@ -325,61 +324,63 @@ export default function Calendar({ className = '' }: CalendarProps) {
     };
 
     return (
-        <div className={`bg-zinc-900 text-yellow-300 ${className}`}>
-            {/* Calendar Header */}
-            <div className="flex items-center justify-between mb-6">
-                <button
-                    onClick={() => navigateMonth('prev')}
-                    className="p-2 rounded-lg hover:bg-zinc-800 transition-colors"
-                    aria-label="Mes anterior"
-                >
-                    <span className="text-xl">←</span>
-                </button>
-
-                <h2 className="text-xl font-bold">
-                    {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
-                </h2>
-
-                <button
-                    onClick={() => navigateMonth('next')}
-                    className="p-2 rounded-lg hover:bg-zinc-800 transition-colors"
-                    aria-label="Mes siguiente"
-                >
-                    <span className="text-xl">→</span>
-                </button>
-            </div>
-
-            {/* Day Names Header */}
-            <div className="grid grid-cols-7 gap-1 mb-2">
-                {dayNames.map(day => (
-                    <div
-                        key={day}
-                        className="h-10 flex items-center justify-center text-sm font-semibold text-yellow-400"
+        <div className={`bg-zinc-900 text-yellow-300 h-full flex flex-col min-h-0 ${className}`}>
+            <div className="flex-shrink-0">
+                {/* Calendar Header */}
+                <div className="flex items-center justify-between mb-6">
+                    <button
+                        onClick={() => navigateMonth('prev')}
+                        className="p-2 rounded-lg hover:bg-zinc-800 transition-colors"
+                        aria-label="Mes anterior"
                     >
-                        {day}
-                    </div>
-                ))}
-            </div>
+                        <span className="text-xl">←</span>
+                    </button>
 
-            {/* Calendar Grid */}
-            <div className="grid grid-cols-7 gap-1">
-                {loading ? (
-                    // Loading skeleton
-                    Array.from({ length: 42 }, (_, i) => (
-                        <div key={i} className="h-10 flex items-center justify-center">
-                            <div className="w-4 h-4 bg-yellow-300/20 rounded-full animate-[pulse_0.8s_ease-in-out_infinite]"></div>
+                    <h2 className="text-xl font-bold">
+                        {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
+                    </h2>
+
+                    <button
+                        onClick={() => navigateMonth('next')}
+                        className="p-2 rounded-lg hover:bg-zinc-800 transition-colors"
+                        aria-label="Mes siguiente"
+                    >
+                        <span className="text-xl">→</span>
+                    </button>
+                </div>
+
+                {/* Day Names Header */}
+                <div className="grid grid-cols-7 gap-1 mb-2">
+                    {dayNames.map(day => (
+                        <div
+                            key={day}
+                            className="h-10 flex items-center justify-center text-sm font-semibold text-yellow-400"
+                        >
+                            {day}
                         </div>
-                    ))
-                ) : (
-                    renderCalendarDays()
-                )}
+                    ))}
+                </div>
+
+                {/* Calendar Grid */}
+                <div className="grid grid-cols-7 gap-1">
+                    {loading ? (
+                        // Loading skeleton
+                        Array.from({ length: 42 }, (_, i) => (
+                            <div key={i} className="h-10 flex items-center justify-center">
+                                <div className="w-4 h-4 bg-yellow-300/20 rounded-full animate-[pulse_0.8s_ease-in-out_infinite]"></div>
+                            </div>
+                        ))
+                    ) : (
+                        renderCalendarDays()
+                    )}
+                </div>
             </div>
 
             {/* Selected Day Beer List */}
             {selectedDay && (
-                <div className="mt-6">
+                <div className="flex-1 flex flex-col mt-6 min-h-0">
                     {/* Header */}
-                    <div className="bg-zinc-800 rounded-t-lg p-4 border-b border-zinc-700">
+                    <div className="bg-zinc-800 rounded-t-lg p-4 border-b border-zinc-700 flex-shrink-0">
                         <h3 className="text-xl font-bold text-yellow-300">
                             {selectedDay} de {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
                         </h3>
@@ -388,7 +389,7 @@ export default function Calendar({ className = '' }: CalendarProps) {
                             const totalQuantity = dayBeers.reduce((sum, beer) => sum + beer.quantity, 0);
                             return (
                                 <p className="text-zinc-400 text-sm mt-1">
-                                    {dayBeers.length > 0 
+                                    {dayBeers.length > 0
                                         ? `${dayBeers.length} cerveza${dayBeers.length !== 1 ? 's' : ''} • Total: ${totalQuantity.toFixed(2)}L`
                                         : 'No hay cervezas registradas'
                                     }
@@ -396,13 +397,13 @@ export default function Calendar({ className = '' }: CalendarProps) {
                             );
                         })()}
                     </div>
-                    
-                    {/* Beer List */}
-                    <div className="bg-zinc-800 rounded-b-lg max-h-80 overflow-y-auto">
+
+                    {/* Beer List - Scrollable */}
+                    <div className="bg-zinc-800 rounded-b-lg flex-1 overflow-y-auto min-h-0">
                         <div className="p-4">
                             {(() => {
                                 const dayBeers = getSelectedDayBeers();
-                                
+
                                 return (
                                     <div className="space-y-3">
                                         {dayBeers.length === 0 ? (
@@ -448,7 +449,7 @@ export default function Calendar({ className = '' }: CalendarProps) {
                                                 </div>
                                             ))
                                         )}
-                                        
+
                                         {/* Add Beer Button - Always visible */}
                                         <button
                                             onClick={handleAddBeer}
@@ -483,12 +484,12 @@ export default function Calendar({ className = '' }: CalendarProps) {
                                 ×
                             </button>
                         </div>
-                        
+
                         <div className="space-y-4">
                             <div className="text-zinc-300 text-sm">
                                 {selectedDay} de {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
                             </div>
-                            
+
                             <div>
                                 <label className="block text-zinc-300 text-sm font-medium mb-2">
                                     Tamaño de cerveza
@@ -506,7 +507,7 @@ export default function Calendar({ className = '' }: CalendarProps) {
                                             ▼
                                         </span>
                                     </button>
-                                    
+
                                     {showSizeDropdown && (
                                         <div className="absolute top-full left-0 right-0 mt-1 bg-zinc-700 border border-zinc-600 rounded-lg shadow-lg z-10 max-h-48 overflow-y-auto">
                                             {beerSizes.map(size => (
@@ -517,9 +518,8 @@ export default function Calendar({ className = '' }: CalendarProps) {
                                                         setNewBeerQuantity(size.value);
                                                         setShowSizeDropdown(false);
                                                     }}
-                                                    className={`w-full px-3 py-2 text-left hover:bg-zinc-600 transition-colors first:rounded-t-lg last:rounded-b-lg ${
-                                                        newBeerQuantity === size.value ? 'bg-zinc-600 text-yellow-300' : 'text-zinc-300'
-                                                    }`}
+                                                    className={`w-full px-3 py-2 text-left hover:bg-zinc-600 transition-colors first:rounded-t-lg last:rounded-b-lg ${newBeerQuantity === size.value ? 'bg-zinc-600 text-yellow-300' : 'text-zinc-300'
+                                                        }`}
                                                 >
                                                     {size.label} ({size.value}L)
                                                 </button>
@@ -528,7 +528,7 @@ export default function Calendar({ className = '' }: CalendarProps) {
                                     )}
                                 </div>
                             </div>
-                            
+
                             <div>
                                 <label className="block text-zinc-300 text-sm font-medium mb-2">
                                     Hora
@@ -540,7 +540,7 @@ export default function Calendar({ className = '' }: CalendarProps) {
                                     className="w-full bg-zinc-700 border border-zinc-600 rounded-lg px-3 py-2 text-yellow-300 focus:border-yellow-400 focus:outline-none"
                                 />
                             </div>
-                            
+
                             <div className="flex gap-3 pt-4">
                                 <button
                                     onClick={closeAddModal}
@@ -576,12 +576,12 @@ export default function Calendar({ className = '' }: CalendarProps) {
                                 ×
                             </button>
                         </div>
-                        
+
                         <div className="space-y-4">
                             <div className="text-zinc-300 text-sm">
                                 {selectedDay} de {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
                             </div>
-                            
+
                             <div>
                                 <label className="block text-zinc-300 text-sm font-medium mb-2">
                                     Tamaño de cerveza
@@ -599,7 +599,7 @@ export default function Calendar({ className = '' }: CalendarProps) {
                                             ▼
                                         </span>
                                     </button>
-                                    
+
                                     {showEditSizeDropdown && (
                                         <div className="absolute top-full left-0 right-0 mt-1 bg-zinc-700 border border-zinc-600 rounded-lg shadow-lg z-10 max-h-48 overflow-y-auto">
                                             {beerSizes.map(size => (
@@ -610,9 +610,8 @@ export default function Calendar({ className = '' }: CalendarProps) {
                                                         setNewBeerQuantity(size.value);
                                                         setShowEditSizeDropdown(false);
                                                     }}
-                                                    className={`w-full px-3 py-2 text-left hover:bg-zinc-600 transition-colors first:rounded-t-lg last:rounded-b-lg ${
-                                                        newBeerQuantity === size.value ? 'bg-zinc-600 text-yellow-300' : 'text-zinc-300'
-                                                    }`}
+                                                    className={`w-full px-3 py-2 text-left hover:bg-zinc-600 transition-colors first:rounded-t-lg last:rounded-b-lg ${newBeerQuantity === size.value ? 'bg-zinc-600 text-yellow-300' : 'text-zinc-300'
+                                                        }`}
                                                 >
                                                     {size.label} ({size.value}L)
                                                 </button>
@@ -621,7 +620,7 @@ export default function Calendar({ className = '' }: CalendarProps) {
                                     )}
                                 </div>
                             </div>
-                            
+
                             <div>
                                 <label className="block text-zinc-300 text-sm font-medium mb-2">
                                     Hora
@@ -633,7 +632,7 @@ export default function Calendar({ className = '' }: CalendarProps) {
                                     className="w-full bg-zinc-700 border border-zinc-600 rounded-lg px-3 py-2 text-yellow-300 focus:border-yellow-400 focus:outline-none"
                                 />
                             </div>
-                            
+
                             <div className="flex gap-3 pt-4">
                                 <button
                                     onClick={closeEditModal}
@@ -669,7 +668,7 @@ export default function Calendar({ className = '' }: CalendarProps) {
                                 ×
                             </button>
                         </div>
-                        
+
                         <div className="space-y-4">
                             <div className="bg-zinc-700 rounded-lg p-4 border border-zinc-600">
                                 <div className="flex items-center gap-3">
@@ -686,7 +685,7 @@ export default function Calendar({ className = '' }: CalendarProps) {
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div className="flex gap-3 pt-4">
                                 <button
                                     onClick={closeDeleteModal}
