@@ -3,10 +3,10 @@
 import { useState } from 'react';
 import BeerCounter from './BeerCounter';
 import BeerLeaderboard from './BeerLeaderboard';
-import BeerStats from './BeerStats';
+import CalendarPage from './CalendarPage';
 import { BeerProvider } from '@/lib/context/BeerContext';
 
-type ActivePage = 'counter' | 'leaderboard' | 'stats';
+type ActivePage = 'counter' | 'leaderboard' | 'calendar';
 
 export default function AuthenticatedHome() {
     const [activePage, setActivePage] = useState<ActivePage>('counter');
@@ -17,14 +17,14 @@ export default function AuthenticatedHome() {
                 return <BeerCounter />;
             case 'leaderboard':
                 return <BeerLeaderboard />;
-            case 'stats':
-                return <BeerStats />;
+            case 'calendar':
+                return <CalendarPage />;
             default:
                 return <BeerCounter />;
         }
     };
 
-    return (  
+    return (
         <BeerProvider>
             <div className="h-full flex flex-col overflow-hidden">
                 <div className="flex-1 overflow-hidden">
@@ -38,8 +38,8 @@ export default function AuthenticatedHome() {
                         <button
                             onClick={() => setActivePage('leaderboard')}
                             className={`flex-1 flex flex-col items-center py-2 px-4 rounded-lg transition-colors ${activePage === 'leaderboard'
-                                    ? 'text-yellow-300 bg-zinc-800'
-                                    : 'text-zinc-400 hover:text-yellow-300'
+                                ? 'text-yellow-300 bg-zinc-800'
+                                : 'text-zinc-400 hover:text-yellow-300'
                                 }`}
                         >
                             <span className="text-xl">🏆</span>
@@ -49,8 +49,8 @@ export default function AuthenticatedHome() {
                         <button
                             onClick={() => setActivePage('counter')}
                             className={`flex-1 flex flex-col items-center py-2 px-4 rounded-lg transition-colors ${activePage === 'counter'
-                                    ? 'text-yellow-300 bg-zinc-800'
-                                    : 'text-zinc-400 hover:text-yellow-300'
+                                ? 'text-yellow-300 bg-zinc-800'
+                                : 'text-zinc-400 hover:text-yellow-300'
                                 }`}
                         >
                             <span className="text-xl">🍺</span>
@@ -58,14 +58,14 @@ export default function AuthenticatedHome() {
                         </button>
 
                         <button
-                            onClick={() => setActivePage('stats')}
-                            className={`flex-1 flex flex-col items-center py-2 px-4 rounded-lg transition-colors ${activePage === 'stats'
-                                    ? 'text-yellow-300 bg-zinc-800'
-                                    : 'text-zinc-400 hover:text-yellow-300'
+                            onClick={() => setActivePage('calendar')}
+                            className={`flex-1 flex flex-col items-center py-2 px-4 rounded-lg transition-colors ${activePage === 'calendar'
+                                ? 'text-yellow-300 bg-zinc-800'
+                                : 'text-zinc-400 hover:text-yellow-300'
                                 }`}
                         >
-                            <span className="text-xl">📊</span>
-                            <span className="text-xs mt-1">Stats</span>
+                            <span className="text-xl">📅</span>
+                            <span className="text-xs mt-1">Calendar</span>
                         </button>
                     </div>
                 </nav>
