@@ -49,11 +49,6 @@
 - **Purpose**: User session management
 - **Data**: Fetches from `/api/auth/session`
 
-### `NotificationContext.tsx`
-- **State**: `isSupported`, `permission`, `isSubscribed`
-- **Methods**: `requestPermission()`, `subscribe()`, `sendNotification()`
-- **Purpose**: Push notification management
-
 ## Component Patterns
 
 ### Loading States
