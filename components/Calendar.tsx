@@ -35,6 +35,8 @@ export default function Calendar({ className = '' }: CalendarProps) {
     const [newBeerTime, setNewBeerTime] = useState('');
     const [showSizeDropdown, setShowSizeDropdown] = useState(false);
     const [showEditSizeDropdown, setShowEditSizeDropdown] = useState(false);
+    const [showTimeDropdown, setShowTimeDropdown] = useState(false);
+    const [showEditTimeDropdown, setShowEditTimeDropdown] = useState(false);
     const { updateTotal, totalLiters } = useBeer();
 
     // Set default selected day to today if it's in the current month
@@ -130,6 +132,15 @@ export default function Calendar({ className = '' }: CalendarProps) {
         { label: '1L', value: '1.0' }
     ];
 
+    // Time options (every 15 minutes)
+    const timeOptions = [];
+    for (let hour = 0; hour < 24; hour++) {
+        for (let minute = 0; minute < 60; minute += 15) {
+            const timeString = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+            timeOptions.push(timeString);
+        }
+    }
+
     const handleSaveBeer = async () => {
         if (!selectedDay || !newBeerQuantity || !newBeerTime) return;
 
@@ -168,6 +179,7 @@ export default function Calendar({ className = '' }: CalendarProps) {
     const closeAddModal = () => {
         setShowAddModal(false);
         setShowSizeDropdown(false);
+        setShowTimeDropdown(false);
         setNewBeerQuantity('');
         setNewBeerTime('');
     };
@@ -251,6 +263,7 @@ export default function Calendar({ className = '' }: CalendarProps) {
     const closeEditModal = () => {
         setShowEditModal(false);
         setShowEditSizeDropdown(false);
+        setShowEditTimeDropdown(false);
         setEditingBeer(null);
         setNewBeerQuantity('');
         setNewBeerTime('');
@@ -352,22 +365,19 @@ export default function Calendar({ className = '' }: CalendarProps) {
                 {/* Day Names Header */}
                 <div className="grid grid-cols-7 gap-1 mb-2">
                     {dayNames.map(day => (
-                        <div
-                            key={day}
-                            className="h-10 flex items-center justify-center text-sm font-semibold text-yellow-400"
-                        >
+                        <div key={day} className="h-10 flex items-center justify-center text-sm font-semibold text-yellow-400">
                             {day}
                         </div>
                     ))}
                 </div>
 
                 {/* Calendar Grid */}
-                <div className="grid grid-cols-7 gap-1">
+                <div className="grid grid-cols-7 gap-1 mb-2">
                     {loading ? (
                         // Loading skeleton
-                        Array.from({ length: 42 }, (_, i) => (
+                        Array.from({ length: 35 }, (_, i) => (
                             <div key={i} className="h-10 flex items-center justify-center">
-                                <div className="w-4 h-4 bg-yellow-300/20 rounded-full animate-[pulse_0.8s_ease-in-out_infinite]"></div>
+                                <div className="w-8 h-8 bg-yellow-300/20 rounded-full animate-[pulse_0.8s_ease-in-out_infinite]"></div>
                             </div>
                         ))
                     ) : (
@@ -384,18 +394,6 @@ export default function Calendar({ className = '' }: CalendarProps) {
                         <h3 className="text-xl font-bold text-yellow-300">
                             {selectedDay} de {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
                         </h3>
-                        {(() => {
-                            const dayBeers = getSelectedDayBeers();
-                            const totalQuantity = dayBeers.reduce((sum, beer) => sum + beer.quantity, 0);
-                            return (
-                                <p className="text-zinc-400 text-sm mt-1">
-                                    {dayBeers.length > 0
-                                        ? `${dayBeers.length} cerveza${dayBeers.length !== 1 ? 's' : ''} • Total: ${totalQuantity.toFixed(2)}L`
-                                        : 'No hay cervezas registradas'
-                                    }
-                                </p>
-                            );
-                        })()}
                     </div>
 
                     {/* Beer List - Scrollable */}
@@ -406,49 +404,42 @@ export default function Calendar({ className = '' }: CalendarProps) {
 
                                 return (
                                     <div className="space-y-3">
-                                        {dayBeers.length === 0 ? (
-                                            <div className="text-center py-4">
-                                                <div className="text-4xl mb-2">🍺</div>
-                                                <p className="text-zinc-400">No bebiste nada este día</p>
-                                                <p className="text-zinc-500 text-sm mt-1">¡Perfecto para la salud!</p>
-                                            </div>
-                                        ) : (
-                                            dayBeers.map((beer) => (
-                                                <div key={beer.id} className="bg-zinc-700 rounded-lg p-4 border border-zinc-600 hover:border-yellow-400/30 transition-colors">
-                                                    <div className="flex items-center justify-between">
-                                                        <div className="flex items-center gap-3">
-                                                            <div className="w-10 h-10 bg-yellow-400/20 rounded-full flex items-center justify-center">
-                                                                <span className="text-xl">🍺</span>
-                                                            </div>
-                                                            <div className="flex flex-col">
-                                                                <div className="text-yellow-300 font-semibold text-lg">
-                                                                    {beer.quantity}L
-                                                                </div>
-                                                                <div className="text-zinc-300 text-sm">
-                                                                    {beer.time}
-                                                                </div>
-                                                            </div>
+                                        {dayBeers.map((beer) => (
+                                            <div key={beer.id} className="bg-zinc-700 rounded-lg p-4 border border-zinc-600 hover:border-yellow-400/30 transition-colors">
+                                                <div className="flex items-center justify-between">
+                                                    <div className="flex items-center gap-3">
+                                                        <div className="w-10 h-10 bg-yellow-400/20 rounded-full flex items-center justify-center">
+                                                            <span className="text-xl">🍺</span>
                                                         </div>
-                                                        <div className="flex gap-2">
-                                                            <button
-                                                                onClick={() => handleEditBeer(beer)}
-                                                                className="p-2 text-zinc-400 hover:text-yellow-300 hover:bg-zinc-600 rounded-lg transition-colors"
-                                                                title="Editar cerveza"
-                                                            >
-                                                                ✏️
-                                                            </button>
-                                                            <button
-                                                                onClick={() => handleRemoveBeer(beer)}
-                                                                className="p-2 text-zinc-400 hover:text-red-400 hover:bg-zinc-600 rounded-lg transition-colors"
-                                                                title="Eliminar cerveza"
-                                                            >
-                                                                🗑️
-                                                            </button>
+                                                        <div className="flex flex-col">
+                                                            <div className="text-yellow-300 font-semibold text-lg">
+                                                                {beer.quantity}L
+                                                            </div>
+                                                            <div className="text-zinc-300 text-sm">
+                                                                {beer.time}
+                                                            </div>
                                                         </div>
                                                     </div>
+                                                    <div className="flex gap-2">
+                                                        <button
+                                                            onClick={() => handleEditBeer(beer)}
+                                                            className="p-2 text-zinc-400 hover:text-yellow-300 hover:bg-zinc-600 rounded-lg transition-colors"
+                                                            title="Editar cerveza"
+                                                        >
+                                                            ✏️
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleRemoveBeer(beer)}
+                                                            className="p-2 text-zinc-400 hover:text-red-400 hover:bg-zinc-600 rounded-lg transition-colors"
+                                                            title="Eliminar cerveza"
+                                                        >
+                                                            🗑️
+                                                        </button>
+                                                    </div>
                                                 </div>
-                                            ))
-                                        )}
+                                            </div>
+                                        ))
+                                        }
 
                                         {/* Add Beer Button - Always visible */}
                                         <button
@@ -533,12 +524,39 @@ export default function Calendar({ className = '' }: CalendarProps) {
                                 <label className="block text-zinc-300 text-sm font-medium mb-2">
                                     Hora
                                 </label>
-                                <input
-                                    type="time"
-                                    value={newBeerTime}
-                                    onChange={(e) => setNewBeerTime(e.target.value)}
-                                    className="w-full bg-zinc-700 border border-zinc-600 rounded-lg px-3 py-2 text-yellow-300 focus:border-yellow-400 focus:outline-none"
-                                />
+                                <div className="relative">
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowTimeDropdown(!showTimeDropdown)}
+                                        className="w-full bg-zinc-700 border border-zinc-600 rounded-lg px-3 py-2 text-yellow-300 focus:border-yellow-400 focus:outline-none flex items-center justify-between hover:border-zinc-500 transition-colors"
+                                    >
+                                        <span>
+                                            {newBeerTime || '12:00'}
+                                        </span>
+                                        <span className={`transform transition-transform ${showTimeDropdown ? 'rotate-180' : ''}`}>
+                                            ▼
+                                        </span>
+                                    </button>
+
+                                    {showTimeDropdown && (
+                                        <div className="absolute top-full left-0 right-0 mt-1 bg-zinc-700 border border-zinc-600 rounded-lg shadow-lg z-10 max-h-48 overflow-y-auto">
+                                            {timeOptions.map(time => (
+                                                <button
+                                                    key={time}
+                                                    type="button"
+                                                    onClick={() => {
+                                                        setNewBeerTime(time);
+                                                        setShowTimeDropdown(false);
+                                                    }}
+                                                    className={`w-full px-3 py-2 text-left hover:bg-zinc-600 transition-colors first:rounded-t-lg last:rounded-b-lg ${newBeerTime === time ? 'bg-zinc-600 text-yellow-300' : 'text-zinc-300'
+                                                        }`}
+                                                >
+                                                    {time}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
                             </div>
 
                             <div className="flex gap-3 pt-4">
@@ -625,12 +643,39 @@ export default function Calendar({ className = '' }: CalendarProps) {
                                 <label className="block text-zinc-300 text-sm font-medium mb-2">
                                     Hora
                                 </label>
-                                <input
-                                    type="time"
-                                    value={newBeerTime}
-                                    onChange={(e) => setNewBeerTime(e.target.value)}
-                                    className="w-full bg-zinc-700 border border-zinc-600 rounded-lg px-3 py-2 text-yellow-300 focus:border-yellow-400 focus:outline-none"
-                                />
+                                <div className="relative">
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowEditTimeDropdown(!showEditTimeDropdown)}
+                                        className="w-full bg-zinc-700 border border-zinc-600 rounded-lg px-3 py-2 text-yellow-300 focus:border-yellow-400 focus:outline-none flex items-center justify-between hover:border-zinc-500 transition-colors"
+                                    >
+                                        <span>
+                                            {newBeerTime || '12:00'}
+                                        </span>
+                                        <span className={`transform transition-transform ${showEditTimeDropdown ? 'rotate-180' : ''}`}>
+                                            ▼
+                                        </span>
+                                    </button>
+
+                                    {showEditTimeDropdown && (
+                                        <div className="absolute top-full left-0 right-0 mt-1 bg-zinc-700 border border-zinc-600 rounded-lg shadow-lg z-10 max-h-48 overflow-y-auto">
+                                            {timeOptions.map(time => (
+                                                <button
+                                                    key={time}
+                                                    type="button"
+                                                    onClick={() => {
+                                                        setNewBeerTime(time);
+                                                        setShowEditTimeDropdown(false);
+                                                    }}
+                                                    className={`w-full px-3 py-2 text-left hover:bg-zinc-600 transition-colors first:rounded-t-lg last:rounded-b-lg ${newBeerTime === time ? 'bg-zinc-600 text-yellow-300' : 'text-zinc-300'
+                                                        }`}
+                                                >
+                                                    {time}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
                             </div>
 
                             <div className="flex gap-3 pt-4">
